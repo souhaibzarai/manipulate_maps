@@ -71,5 +71,3 @@ app.*.map.json
 !pubspec.lock
 !lib/
 !assets/
-
-# xd

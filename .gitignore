@@ -61,5 +61,9 @@ app.*.map.json
 !pubspec.yaml
 !pubspec.lock
 !lib/
+!lib/business_logic
+!lib/constants
+!lib/data
+!lib/presentation
 !assets/
 !android

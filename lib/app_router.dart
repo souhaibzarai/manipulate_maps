@@ -6,7 +6,7 @@ class AppRouter {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(
-          builder: (_) => AuthenticationScreen(),
+          builder: (context) => AuthenticationScreen(),
         );
     }
 

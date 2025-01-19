@@ -38,9 +38,12 @@ class AuthenticationScreen extends StatelessWidget {
                     }
                     return null;
                   },
+                  keyboardType: TextInputType.number,
+                  
                   decoration: InputDecoration(
                     hintText: 'Enter your phone number',
                     border: OutlineInputBorder(),
+                    
                   ),
                 ),
                 SizedBox(height: 20),

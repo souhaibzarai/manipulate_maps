@@ -6,14 +6,20 @@ import 'package:manipulate_maps/presentation/screens/otp.dart';
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case authScreen :
+      case authScreen:
         return MaterialPageRoute(
-          builder: (context) => AuthenticationScreen(),
+          builder: (context) => BlocProvider(
+            create: (context) => ,
+            child: AuthenticationScreen(),
+          ),
         );
 
       case otpScreen:
         return MaterialPageRoute(
-          builder: (context) => OTPScreen(),
+          builder: (context) => BlocProvider(
+            create: (context) => ,
+            child: OTPScreen(),
+          ),
         );
 
       default:

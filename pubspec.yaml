@@ -36,13 +36,13 @@ dependencies:
   flutter_bloc: ^9.0.0
   flutter_launcher_icons: ^0.14.3
   meta: ^1.15.0
+  pin_code_fields: ^8.0.1
   transparent_image: ^2.0.1
 
 dev_dependencies:
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
-
 
 flutter_launcher_icons:
   android: true
@@ -51,7 +51,6 @@ flutter_launcher_icons:
   image_path: assets/images/ic_launcher.png
   adaptative_icon_background: '#000000'
   adaptative_icon_foreground: assets/images/ic_launcher.png
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

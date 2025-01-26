@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manipulate_maps/constants/colors.dart';
+import 'package:manipulate_maps/constants/strings.dart';
 import 'package:manipulate_maps/presentation/widgets/auth_form_field.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -8,11 +9,14 @@ class AuthenticationScreen extends StatelessWidget {
 
   final _formKey = GlobalKey<FormState>();
 
-  void validateForm() {
+  void validateForm(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      print('hello world');
+      print('done');
+      Navigator.of(context).pushNamed(otpScreen);
     }
   }
+
+  final _phoneNumberController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +25,7 @@ class AuthenticationScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Container(
             width: double.infinity,
-            margin: EdgeInsets.only(top: 20, left: 15, right: 15),
+            margin: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
             child: Form(
               key: _formKey,
               child: Column(
@@ -31,9 +35,10 @@ class AuthenticationScreen extends StatelessWidget {
                   Text(
                     'Login With Phone Number',
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.darkColor,
+                      fontStyle: FontStyle.italic,
+                      color: AppColors.headerColor,
                     ),
                   ),
                   SizedBox(height: 40),
@@ -54,15 +59,17 @@ class AuthenticationScreen extends StatelessWidget {
                       AuthFormField(isReadOnly: true),
                       SizedBox(width: 10),
                       AuthFormField(
-                        controller: null,
+                        controller: _phoneNumberController,
                       ),
                     ],
                   ),
-                  SizedBox(height: 70),
+                  SizedBox(height: 50),
                   Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
-                      onPressed: validateForm,
+                      onPressed: () {
+                        validateForm(context);
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.darkColor,
                         foregroundColor: AppColors.thirdColor,

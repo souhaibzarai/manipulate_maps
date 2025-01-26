@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:manipulate_maps/constants/strings.dart';
-import 'package:manipulate_maps/presentation/screens/authentication.dart';
-import 'package:manipulate_maps/presentation/screens/otp.dart';
+import 'package:manipulate_maps/presentation/screens/authentication_screen.dart';
+import 'package:manipulate_maps/presentation/screens/otp_screen.dart';
 
 // import 'package:flutter_bloc/flutter_bloc.dart';
 

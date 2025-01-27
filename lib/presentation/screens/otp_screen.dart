@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manipulate_maps/presentation/widgets/otp_field.dart';
+import '../widgets/otp_field.dart';
 
 import '../../constants/colors.dart';
 

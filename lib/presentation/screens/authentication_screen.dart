@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:manipulate_maps/constants/colors.dart';
-import 'package:manipulate_maps/constants/strings.dart';
-import 'package:manipulate_maps/presentation/widgets/auth_form_field.dart';
+import '../../constants/colors.dart';
+import '../../constants/strings.dart';
+import '../widgets/auth_form_field.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class AuthenticationScreen extends StatelessWidget {

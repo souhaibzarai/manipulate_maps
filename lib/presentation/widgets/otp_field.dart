@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manipulate_maps/constants/colors.dart';
+import '../../constants/colors.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class OTPField extends StatelessWidget {

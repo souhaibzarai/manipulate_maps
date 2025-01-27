@@ -1,37 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:manipulate_maps/constants/strings.dart';
-import 'package:manipulate_maps/presentation/screens/authentication_screen.dart';
-import 'package:manipulate_maps/presentation/screens/otp_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-// import 'package:flutter_bloc/flutter_bloc.dart';
+import 'business_logic/cubit/phone_auth_cubit.dart';
+import 'constants/strings.dart';
+import 'presentation/screens/authentication_screen.dart';
+import 'presentation/screens/map_screen.dart';
+import 'presentation/screens/otp_screen.dart';
 
 class AppRouter {
+  PhoneAuthCubit? phoneAuthCubit;
+  AppRouter() {
+    phoneAuthCubit = PhoneAuthCubit();
+  }
+
   Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case authScreen:
         return MaterialPageRoute(
-          builder: (context) => AuthenticationScreen(),
+          builder: (context) => BlocProvider<PhoneAuthCubit>.value(
+            value: phoneAuthCubit!,
+            child: AuthenticationScreen(),
+          ),
         );
 
       case otpScreen:
         return MaterialPageRoute(
-          builder: (context) => OTPScreen(),
+          builder: (context) => BlocProvider<PhoneAuthCubit>.value(
+            value: phoneAuthCubit!,
+            child: OTPScreen(),
+          ),
+        );
+
+      case mapScreen:
+        return MaterialPageRoute(
+          builder: (context) => MapScreen(),
         );
 
       // case authScreen:
-      // return MaterialPageRoute(
-      //   builder: (context) => BlocProvider.value(
-      //     value: ,
-      //     child: AuthenticationScreen(),
-      //   ),
-      // );
+      //   return MaterialPageRoute(
+      //     builder: (context) => AuthenticationScreen(),
+      //   );
 
       // case otpScreen:
       //   return MaterialPageRoute(
-      //     builder: (context) => BlocProvider.value(
-      //       value: ,
-      //       child: OTPScreen(),
-      //     ),
+      //     builder: (context) => OTPScreen(),
       //   );
 
       default:

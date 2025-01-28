@@ -39,6 +39,7 @@ class PhoneAuthCubit extends Cubit<PhoneAuthState> {
 
   void codeAutoRetrievalTimeout(String verificationId) {
     // TODO
+    print('codeAutoRetrievalTimeout');
   }
 
   Future<void> authenticateUser(PhoneAuthCredential credential) async {

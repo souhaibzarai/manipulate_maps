@@ -6,9 +6,31 @@ import '../../constants/colors.dart';
 class OTPScreen extends StatelessWidget {
   const OTPScreen({
     super.key,
+    required this.phoneNumber,
   });
 
-  final String phoneNumber = '+212 682421088';
+  final phoneNumber;
+
+  void showProgressIndicator(BuildContext context) {
+    AlertDialog alertDialog = AlertDialog(
+      backgroundColor: AppColors.transparentColor,
+      elevation: 0,
+      content: Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation(AppColors.darkColor),
+        ),
+      ),
+    );
+
+    showDialog(
+      barrierColor: AppColors.thirdColor,
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return alertDialog;
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,24 +42,23 @@ class OTPScreen extends StatelessWidget {
           child: Column(
             children: [
               RichText(
-                text: TextSpan(children: [
-                  TextSpan(
+                text: TextSpan(
                     text: 'Enter code sent to ',
                     style: TextStyle(
                       fontSize: 19,
                       fontStyle: FontStyle.italic,
                       color: AppColors.darkColor,
                     ),
-                  ),
-                  TextSpan(
-                    text: phoneNumber,
-                    style: TextStyle(
-                      fontSize: 19,
-                      fontStyle: FontStyle.italic,
-                      color: AppColors.headerColor,
-                    ),
-                  ),
-                ]),
+                    children: [
+                      TextSpan(
+                        text: phoneNumber,
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontStyle: FontStyle.italic,
+                          color: AppColors.headerColor,
+                        ),
+                      ),
+                    ]),
               ),
               SizedBox(height: 35),
               OTPField(),

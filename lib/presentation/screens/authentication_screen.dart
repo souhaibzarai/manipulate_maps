@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:manipulate_maps/business_logic/cubit/phone_auth_cubit.dart';
 import '../../constants/colors.dart';
 import '../../constants/strings.dart';
 import '../widgets/auth_form_field.dart';
@@ -7,16 +9,97 @@ import 'package:transparent_image/transparent_image.dart';
 class AuthenticationScreen extends StatelessWidget {
   AuthenticationScreen({super.key});
 
+  late final String phoneNumber;
+  final _phoneNumberController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
-  void validateForm(BuildContext context) {
-    if (_formKey.currentState!.validate()) {
-      print('done');
-      Navigator.of(context).pushNamed(otpScreen);
+  Widget _submitPhoneNumberButton(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: ElevatedButton(
+        onPressed: () {
+          showProgressIndicator(context);
+          _authenticate(context);
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.darkColor,
+          foregroundColor: AppColors.thirdColor,
+          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: Text('Next'),
+      ),
+    );
+  }
+
+  Future<void> _authenticate(BuildContext context) async {
+    if (!_formKey.currentState!.validate()) {
+      Navigator.pop(context);
+      return;
+    } else {
+      Navigator.pop(context);
+      print('working well');
+      _formKey.currentState!.save();
+      phoneNumber = _phoneNumberController.text;
+      BlocProvider.of<PhoneAuthCubit>(context).submitPhoneNumber(phoneNumber);
     }
   }
 
-  final _phoneNumberController = TextEditingController();
+  void showProgressIndicator(BuildContext context) {
+    AlertDialog alertDialog = AlertDialog(
+      backgroundColor: AppColors.transparentColor,
+      elevation: 0,
+      content: Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation(AppColors.darkColor),
+        ),
+      ),
+    );
+
+    showDialog(
+      barrierColor: AppColors.thirdColor,
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return alertDialog;
+      },
+    );
+  }
+
+  Widget _phoneNumberSubmitedBloc() {
+    return BlocListener<PhoneAuthCubit, PhoneAuthState>(
+      listenWhen: (previous, current) {
+        return previous != current;
+      },
+      listener: (context, state) {
+        if (state is Loading) {
+          showProgressIndicator(context);
+        }
+
+        if (state is PhoneNumberSubmitted) {
+          Navigator.pop(context);
+          Navigator.pushNamed(context, otpScreen, arguments: phoneNumber);
+        }
+
+        if (state is ErrorOccurred) {
+          String errorMessage = state.errorMsg;
+
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(errorMessage),
+            dismissDirection: DismissDirection.startToEnd,
+            duration: Duration(seconds: 8),
+            backgroundColor: AppColors.headerColor,
+          ));
+        }
+      },
+      child: Container(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,24 +147,8 @@ class AuthenticationScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 50),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        validateForm(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.darkColor,
-                        foregroundColor: AppColors.thirdColor,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text('Next'),
-                    ),
-                  ),
+                  _submitPhoneNumberButton(context),
+                  _phoneNumberSubmitedBloc(),
                 ],
               ),
             ),

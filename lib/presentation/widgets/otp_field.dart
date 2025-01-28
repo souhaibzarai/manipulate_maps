@@ -3,7 +3,9 @@ import '../../constants/colors.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class OTPField extends StatelessWidget {
-  const OTPField({super.key});
+  const OTPField({super.key, required this.verifyOTP});
+
+  final void Function(String codeOTP, BuildContext ctx) verifyOTP;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,8 @@ class OTPField extends StatelessWidget {
       animationDuration: Duration(milliseconds: 300),
       onCompleted: (code) {
         print('Completed | code is> $code');
+        verifyOTP(code, context);
+        print('code sent');
       },
       enableActiveFill: true,
     );

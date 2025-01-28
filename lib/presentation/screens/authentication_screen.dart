@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:manipulate_maps/business_logic/cubit/phone_auth_cubit.dart';
+import 'package:manipulate_maps/presentation/widgets/auth_feature_button.dart';
 import '../../constants/colors.dart';
 import '../../constants/strings.dart';
 import '../widgets/auth_form_field.dart';
@@ -13,27 +14,6 @@ class AuthenticationScreen extends StatelessWidget {
   final _phoneNumberController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-
-  Widget _submitPhoneNumberButton(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: ElevatedButton(
-        onPressed: () {
-          showProgressIndicator(context);
-          _authenticate(context);
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.darkColor,
-          foregroundColor: AppColors.thirdColor,
-          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-        child: Text('Next'),
-      ),
-    );
-  }
 
   Future<void> _authenticate(BuildContext context) async {
     if (!_formKey.currentState!.validate()) {
@@ -147,7 +127,13 @@ class AuthenticationScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 50),
-                  _submitPhoneNumberButton(context),
+                  AuthFeatureButton(
+                    onClickEvent: () {
+                      showProgressIndicator(context);
+                      _authenticate(context);
+                    },
+                    text: 'Next',
+                  ),
                   _phoneNumberSubmitedBloc(),
                 ],
               ),

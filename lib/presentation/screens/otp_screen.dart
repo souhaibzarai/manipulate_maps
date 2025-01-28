@@ -67,39 +67,57 @@ class OTPScreen extends StatelessWidget {
     );
   }
 
+  void verifyOTP(String codeOTP, context) {
+    showProgressIndicator(context);
+    BlocProvider.of<PhoneAuthCubit>(context).submitOTP(codeOTP);
+  }
+
+  String get kPhoneNumber {
+    String phoneNumber = this.phoneNumber;
+    if (phoneNumber.length >= 10 && phoneNumber.startsWith('0')) {
+      phoneNumber = phoneNumber.substring(1);
+    }
+    return phoneNumber;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(),
-        body: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            children: [
-              RichText(
-                text: TextSpan(
-                    text: 'Enter code sent to ',
-                    style: TextStyle(
-                      fontSize: 19,
-                      fontStyle: FontStyle.italic,
-                      color: AppColors.darkColor,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: phoneNumber.toString(),
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontStyle: FontStyle.italic,
-                          color: AppColors.headerColor,
-                        ),
+        body: Center(
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                RichText(
+                  text: TextSpan(
+                      text: 'Enter code sent to ',
+                      style: TextStyle(
+                        fontSize: 19,
+                        fontStyle: FontStyle.italic,
+                        color: AppColors.darkColor,
                       ),
-                    ]),
-              ),
-              SizedBox(height: 35),
-              OTPField(),
-              SizedBox(height: 40),
-              buildPhoneVerificationBloc(),
-            ],
+                      children: [
+                        TextSpan(
+                          text: '+212 $kPhoneNumber',
+                          style: TextStyle(
+                            fontSize: 19,
+                            fontStyle: FontStyle.italic,
+                            color: AppColors.headerColor,
+                          ),
+                        ),
+                      ]),
+                ),
+                SizedBox(height: 35),
+                OTPField(
+                  verifyOTP: verifyOTP,
+                ),
+                SizedBox(height: 35),
+                buildPhoneVerificationBloc(),
+              ],
+            ),
           ),
         ),
       ),

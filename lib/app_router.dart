@@ -28,7 +28,7 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => BlocProvider<PhoneAuthCubit>.value(
             value: phoneAuthCubit!,
-            child: OTPScreen(phoneNumber: phoneNumber),
+            child: OTPScreen(phoneNumber: phoneNumber!),
           ),
         );
 

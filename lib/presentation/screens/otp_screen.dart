@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:manipulate_maps/constants/strings.dart';
+import '../../business_logic/cubit/phone_auth_cubit.dart';
 import '../widgets/otp_field.dart';
 
 import '../../constants/colors.dart';
@@ -32,6 +35,38 @@ class OTPScreen extends StatelessWidget {
     );
   }
 
+  Widget buildPhoneVerificationBloc() {
+    return BlocListener<PhoneAuthCubit, PhoneAuthState>(
+      listenWhen: (previous, current) {
+        return previous != current;
+      },
+      listener: (context, state) {
+        if (state is Loading) {
+          showProgressIndicator(context);
+        }
+
+        if (state is PhoneOTPVerified) {
+          Navigator.pop(context);
+          Navigator.pushReplacementNamed(context, mapScreen);
+        }
+
+        if (state is ErrorOccurred) {
+          String errorMessage = state.errorMsg;
+
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(errorMessage),
+            dismissDirection: DismissDirection.startToEnd,
+            duration: Duration(seconds: 8),
+            backgroundColor: AppColors.headerColor,
+          ));
+        }
+      },
+      child: Container(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -51,7 +86,7 @@ class OTPScreen extends StatelessWidget {
                     ),
                     children: [
                       TextSpan(
-                        text: phoneNumber,
+                        text: phoneNumber.toString(),
                         style: TextStyle(
                           fontSize: 19,
                           fontStyle: FontStyle.italic,
@@ -62,6 +97,8 @@ class OTPScreen extends StatelessWidget {
               ),
               SizedBox(height: 35),
               OTPField(),
+              SizedBox(height: 40),
+              buildPhoneVerificationBloc(),
             ],
           ),
         ),

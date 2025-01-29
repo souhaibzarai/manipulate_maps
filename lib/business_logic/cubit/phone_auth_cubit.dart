@@ -13,7 +13,7 @@ class PhoneAuthCubit extends Cubit<PhoneAuthState> {
     emit(Loading());
 
     await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: '+212$phoneNumber',
+      phoneNumber: '+1$phoneNumber',
       timeout: Duration(seconds: 20),
       verificationCompleted: verificationCompleted,
       verificationFailed: verificationFailed,

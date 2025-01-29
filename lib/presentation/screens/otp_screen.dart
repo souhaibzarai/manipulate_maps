@@ -101,7 +101,7 @@ class OTPScreen extends StatelessWidget {
                       ),
                       children: [
                         TextSpan(
-                          text: '+212 $kPhoneNumber',
+                          text: '+1 $kPhoneNumber',
                           style: TextStyle(
                             fontSize: 19,
                             fontStyle: FontStyle.italic,

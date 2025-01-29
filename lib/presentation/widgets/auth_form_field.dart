@@ -19,7 +19,7 @@ class AuthFormField extends StatelessWidget {
   }
 
   String getCountryFlag(String? countryID) {
-    countryID ??= 'ma';
+    countryID ??= 'us';
     return countryID.toUpperCase().replaceAllMapped(
       RegExp(r'[A-Z]'),
       (flag) {
@@ -46,7 +46,7 @@ class AuthFormField extends StatelessWidget {
           enabledBorder: getInputBorder(AppColors.mainColor),
           focusedBorder: getInputBorder(AppColors.activeColor),
           errorBorder: getInputBorder(AppColors.errorColor),
-          labelText: isReadOnly! ? '${getCountryFlag(null)} +212' : '',
+          labelText: isReadOnly! ? '${getCountryFlag(null)} +1' : '',
         ),
         validator: isReadOnly!
             ? null

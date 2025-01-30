@@ -1,29 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:manipulate_maps/business_logic/cubit/phone_auth_cubit.dart';
+import 'package:manipulate_maps/presentation/widgets/auth_drop_down.dart';
 import 'package:manipulate_maps/presentation/widgets/auth_feature_button.dart';
 import '../../constants/colors.dart';
 import '../../constants/strings.dart';
 import '../widgets/auth_form_field.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-class AuthenticationScreen extends StatelessWidget {
-  AuthenticationScreen({super.key});
+class AuthenticationScreen extends StatefulWidget {
+  const AuthenticationScreen({super.key});
 
+  @override
+  State<AuthenticationScreen> createState() => _AuthenticationScreenState();
+}
+
+class _AuthenticationScreenState extends State<AuthenticationScreen> {
+  final _formKey = GlobalKey<FormState>();
   late final String phoneNumber;
   final _phoneNumberController = TextEditingController();
-
-  final _formKey = GlobalKey<FormState>();
+  bool isCountrySelected = false;
+  String? countryCode;
 
   Future<void> _authenticate(BuildContext context) async {
     if (!_formKey.currentState!.validate()) {
       Navigator.pop(context);
+      // print('country code is: $countryCode');
+      return;
+    } else if (countryCode == null) {
+      // Handle the case where country code is not selected
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please select a country code.'),
+          backgroundColor: AppColors.errorColor,
+        ),
+      );
       return;
     } else {
       Navigator.pop(context);
-      print('working well');
       _formKey.currentState!.save();
-      phoneNumber = _phoneNumberController.text;
+      phoneNumber = '${countryCode!} ${_phoneNumberController.text}';
       BlocProvider.of<PhoneAuthCubit>(context).submitPhoneNumber(phoneNumber);
     }
   }
@@ -71,10 +87,11 @@ class AuthenticationScreen extends StatelessWidget {
           ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(errorMessage),
-            dismissDirection: DismissDirection.startToEnd,
+            dismissDirection: DismissDirection.up,
             duration: Duration(seconds: 8),
             backgroundColor: AppColors.headerColor,
           ));
+          context.read<PhoneAuthCubit>().reset();
         }
       },
       child: Container(),
@@ -118,8 +135,17 @@ class AuthenticationScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // TODO: controller need be set
-                      AuthFormField(isReadOnly: true),
+                      AuthDropDown(
+                        setValue: (country) {
+                          final phonePrefix = country.phonePrefix;
+                          setState(() {
+                            phonePrefix.startsWith('+')
+                                ? countryCode = phonePrefix
+                                : countryCode = '+$phonePrefix';
+                            isCountrySelected = true;
+                          });
+                        },
+                      ),
                       SizedBox(width: 10),
                       AuthFormField(
                         controller: _phoneNumberController,
@@ -132,6 +158,7 @@ class AuthenticationScreen extends StatelessWidget {
                       showProgressIndicator(context);
                       _authenticate(context);
                     },
+                    isEnabled: isCountrySelected,
                     text: 'Next',
                   ),
                   _phoneNumberSubmitedBloc(),

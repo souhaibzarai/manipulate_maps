@@ -12,7 +12,7 @@ class OTPScreen extends StatelessWidget {
     required this.phoneNumber,
   });
 
-  final phoneNumber;
+  final dynamic phoneNumber;
 
   void showProgressIndicator(BuildContext context) {
     AlertDialog alertDialog = AlertDialog(
@@ -72,14 +72,6 @@ class OTPScreen extends StatelessWidget {
     BlocProvider.of<PhoneAuthCubit>(context).submitOTP(codeOTP);
   }
 
-  String get kPhoneNumber {
-    String phoneNumber = this.phoneNumber;
-    if (phoneNumber.length >= 10 && phoneNumber.startsWith('0')) {
-      phoneNumber = phoneNumber.substring(1);
-    }
-    return phoneNumber;
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -101,7 +93,7 @@ class OTPScreen extends StatelessWidget {
                       ),
                       children: [
                         TextSpan(
-                          text: '+1 $kPhoneNumber',
+                          text: phoneNumber,
                           style: TextStyle(
                             fontSize: 19,
                             fontStyle: FontStyle.italic,

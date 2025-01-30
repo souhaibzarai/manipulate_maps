@@ -7,18 +7,20 @@ class AuthFeatureButton extends StatelessWidget {
     required this.onClickEvent,
     required this.text,
     this.alignment = Alignment.centerRight,
+    this.isEnabled = true,
   });
 
-  final void Function() onClickEvent;
+  final void Function()? onClickEvent;
   final String text;
   final Alignment? alignment;
+  final bool? isEnabled;
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: alignment!,
       child: ElevatedButton(
-        onPressed: onClickEvent,
+        onPressed: isEnabled! ? onClickEvent : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.darkColor,
           foregroundColor: AppColors.thirdColor,

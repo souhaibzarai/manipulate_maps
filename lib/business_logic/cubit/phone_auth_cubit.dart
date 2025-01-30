@@ -9,11 +9,15 @@ class PhoneAuthCubit extends Cubit<PhoneAuthState> {
 
   PhoneAuthCubit() : super(PhoneAuthInitial());
 
+  void reset() {
+    emit(PhoneAuthInitial());
+  }
+
   Future<void> submitPhoneNumber(String phoneNumber) async {
     emit(Loading());
 
     await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: '+1$phoneNumber',
+      phoneNumber: '+$phoneNumber',
       timeout: Duration(seconds: 20),
       verificationCompleted: verificationCompleted,
       verificationFailed: verificationFailed,
@@ -30,6 +34,8 @@ class PhoneAuthCubit extends Cubit<PhoneAuthState> {
     emit(ErrorOccurred(
       errorMsg: e.toString(),
     ));
+
+    reset();
   }
 
   void codeSent(String verificationId, int? resendToken) {

@@ -20,7 +20,7 @@ class AuthFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      flex: 3,
+      flex: 2,
       child: TextFormField(
         cursorColor: AppColors.darkColor,
         cursorErrorColor: AppColors.errorColor,
@@ -28,7 +28,7 @@ class AuthFormField extends StatelessWidget {
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           hintText: 'Phone Number',
-          hintStyle: TextStyle(fontSize: 15, color: AppColors.headerColor),
+          hintStyle: TextStyle(fontSize: 13, color: AppColors.headerColor),
           border: getInputBorder(AppColors.mainColor),
           enabledBorder: getInputBorder(AppColors.mainColor),
           focusedBorder: getInputBorder(AppColors.activeColor),

@@ -8,11 +8,11 @@
 # The following line activates a set of recommended lints for Flutter apps,
 # packages, and plugins designed to encourage good coding practices.
 
-# here start of deleting
-analyzer:
-  errors:
-    avoid_print: ignore
-# here end of deleting
+# # here start of deleting
+# analyzer:
+#   errors:
+#     avoid_print: ignore
+# # here end of deleting
 
 include: package:flutter_lints/flutter.yaml
 

@@ -22,3 +22,10 @@ final List<Country> allCountries = [
     phonePrefix: '2',
   ),
 ];
+
+List<Country> copyCountries = List.from(allCountries);
+
+List<Country> get shuffledCountries {
+  copyCountries.shuffle();
+  return copyCountries;
+}

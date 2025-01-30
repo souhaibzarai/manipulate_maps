@@ -54,7 +54,6 @@ class _MapScreenState extends State<MapScreen> {
                     showProgressIndicator(context);
                     await _phoneAuthCubit.logOut();
                     if (!context.mounted) {
-                      print('context does not exist');
                       return;
                     }
                     Navigator.pushReplacementNamed(context, authScreen);

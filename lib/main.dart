@@ -7,8 +7,6 @@ import 'app_router.dart';
 late String _initialRoute;
 
 void main() async {
-  // TODO: remove avoid print from analysis_options.yaml
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 

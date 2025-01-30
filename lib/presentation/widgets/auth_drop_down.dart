@@ -35,12 +35,22 @@ class _AuthDropDownState extends State<AuthDropDown> {
       child: DropdownButtonFormField<Country>(
         dropdownColor: AppColors.thirdColor,
         autofocus: false,
+        elevation: 1,
+        isExpanded: true,
         decoration: InputDecoration(
-          labelText: "Select a Country",
+          labelText: 'Country code',
           labelStyle: TextStyle(
-            fontSize: 15,
+            fontSize: 12,
             color: AppColors.headerColor,
+            overflow: TextOverflow.ellipsis,
           ),
+          contentPadding: EdgeInsets.only(
+            left: 10,
+            top: 20,
+            right: 4,
+            bottom: 20,
+          ),
+          maintainHintHeight: true,
           border: getInputBorder(AppColors.mainColor),
           enabledBorder: getInputBorder(AppColors.mainColor),
           focusedBorder: getInputBorder(AppColors.activeColor),
@@ -52,10 +62,11 @@ class _AuthDropDownState extends State<AuthDropDown> {
           }
           return null;
         },
-        items: allCountries
+        items: shuffledCountries
             .map(
               (country) => DropdownMenuItem(
                 value: country,
+                key: ValueKey(country),
                 child: CustomDropDownItem(country: country),
               ),
             )

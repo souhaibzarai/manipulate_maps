@@ -9,38 +9,31 @@ class CustomDropDownItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              country.flag,
-              style: const TextStyle(
-                fontSize: 18,
-              ), // Display flag
-            ),
-            const SizedBox(width: 10), // Space between flag and country name
-            Text(
-              country.countryName,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 15,
-                color: AppColors.darkColor,
+    return SizedBox(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                country.flag,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 10,
+                ),
               ),
-            ),
-            SizedBox(width: 30),
-          ],
-        ),
-        Text(
-          '+${country.phonePrefix}',
-          style: TextStyle(
-            fontSize: 15,
-            color: AppColors.darkColor,
+            ],
           ),
-        ), // Properly aligned country prefix
-      ],
+          Text(
+            '+${country.phonePrefix}',
+            style: TextStyle(
+              fontSize: 13,
+              color: AppColors.darkColor,
+            ),
+          ), // Properly aligned country prefix
+        ],
+      ),
     );
   }
 }

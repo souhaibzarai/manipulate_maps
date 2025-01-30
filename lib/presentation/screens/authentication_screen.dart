@@ -85,7 +85,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(errorMessage),
-            dismissDirection: DismissDirection.horizontal,
+            dismissDirection: DismissDirection.up,
             duration: Duration(seconds: 8),
             backgroundColor: AppColors.headerColor,
           ));
@@ -111,11 +111,10 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Login With Phone Number',
+                    'Welcome! Sign In',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
                       color: AppColors.headerColor,
                     ),
                   ),

@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
-part 'phone_auth_state.dart';class PhoneAuthCubit extends Cubit<PhoneAuthState> {
+part 'phone_auth_state.dart';
+
+class PhoneAuthCubit extends Cubit<PhoneAuthState> {
   late String verificationId;
 
   PhoneAuthCubit() : super(PhoneAuthInitial());
@@ -15,7 +17,7 @@ part 'phone_auth_state.dart';class PhoneAuthCubit extends Cubit<PhoneAuthState> 
     emit(Loading());
 
     await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
+      phoneNumber: '+$phoneNumber',
       timeout: Duration(seconds: 20),
       verificationCompleted: verificationCompleted,
       verificationFailed: verificationFailed,

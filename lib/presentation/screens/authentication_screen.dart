@@ -7,7 +7,6 @@ import '../../constants/colors.dart';
 import '../../constants/strings.dart';
 import '../widgets/auth_form_field.dart';
 import 'package:transparent_image/transparent_image.dart';
-
 class AuthenticationScreen extends StatefulWidget {
   const AuthenticationScreen({super.key});
 
@@ -16,19 +15,18 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
-  final _formKey = GlobalKey<FormState>();
-  late final String phoneNumber;
+  late String phoneNumber;
   final _phoneNumberController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   bool isCountrySelected = false;
   String? countryCode;
 
   Future<void> _authenticate(BuildContext context) async {
     if (!_formKey.currentState!.validate()) {
       Navigator.pop(context);
-      // print('country code is: $countryCode');
+      print('country code is: $countryCode');
       return;
     } else if (countryCode == null) {
-      // Handle the case where country code is not selected
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please select a country code.'),
@@ -39,7 +37,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     } else {
       Navigator.pop(context);
       _formKey.currentState!.save();
-      phoneNumber = '${countryCode!} ${_phoneNumberController.text}';
+      phoneNumber = '${countryCode!}${_phoneNumberController.text}';
       BlocProvider.of<PhoneAuthCubit>(context).submitPhoneNumber(phoneNumber);
     }
   }
@@ -87,7 +85,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(errorMessage),
-            dismissDirection: DismissDirection.up,
+            dismissDirection: DismissDirection.startToEnd,
             duration: Duration(seconds: 8),
             backgroundColor: AppColors.headerColor,
           ));
@@ -139,9 +137,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                         setValue: (country) {
                           final phonePrefix = country.phonePrefix;
                           setState(() {
-                            phonePrefix.startsWith('+')
-                                ? countryCode = phonePrefix
-                                : countryCode = '+$phonePrefix';
+                            countryCode = phonePrefix.startsWith('+')
+                                ? phonePrefix
+                                : '+$phonePrefix';
                             isCountrySelected = true;
                           });
                         },

@@ -44,12 +44,7 @@ class _AuthDropDownState extends State<AuthDropDown> {
             color: AppColors.headerColor,
             overflow: TextOverflow.ellipsis,
           ),
-          contentPadding: EdgeInsets.only(
-            left: 10,
-            top: 20,
-            right: 4,
-            bottom: 20,
-          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           maintainHintHeight: true,
           border: getInputBorder(AppColors.mainColor),
           enabledBorder: getInputBorder(AppColors.mainColor),

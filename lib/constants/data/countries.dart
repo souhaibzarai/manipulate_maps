@@ -1,4 +1,4 @@
-import 'package:manipulate_maps/business_logic/models/country.dart';
+import '../../business_logic/models/country.dart';
 
 final List<Country> allCountries = [
   Country(

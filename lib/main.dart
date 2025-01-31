@@ -1,12 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:manipulate_maps/constants/strings.dart';
+import 'constants/strings.dart';
 import 'app_router.dart';
 
 late String _initialRoute;
 
 void main() async {
+  // TODO : delete api key from google maps
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 

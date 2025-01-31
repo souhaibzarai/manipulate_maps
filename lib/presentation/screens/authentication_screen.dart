@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:manipulate_maps/business_logic/cubit/phone_auth_cubit.dart';
-import 'package:manipulate_maps/presentation/widgets/auth_drop_down.dart';
-import 'package:manipulate_maps/presentation/widgets/auth_feature_button.dart';
+import '../../business_logic/cubit/phone_auth_cubit.dart';
+import '../widgets/auth_drop_down.dart';
+import '../widgets/auth_feature_button.dart';
 import '../../constants/colors.dart';
 import '../../constants/strings.dart';
 import '../widgets/auth_form_field.dart';

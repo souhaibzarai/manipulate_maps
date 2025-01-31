@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:manipulate_maps/business_logic/models/country.dart';
-import 'package:manipulate_maps/constants/colors.dart';
+import '../../business_logic/models/country.dart';
+import '../../constants/colors.dart';
 
 class CustomDropDownItem extends StatelessWidget {
   const CustomDropDownItem({super.key, required this.country});

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../constants/colors.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+
+import '../../constants/colors.dart';
 
 class OTPField extends StatelessWidget {
   const OTPField({super.key, required this.verifyOTP});

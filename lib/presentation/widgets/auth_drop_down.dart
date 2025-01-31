@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:manipulate_maps/business_logic/models/country.dart';
-import 'package:manipulate_maps/constants/data/countries.dart';
-import 'package:manipulate_maps/presentation/widgets/custom_drop_down_item.dart';
+import '../../business_logic/models/country.dart';
+import '../../constants/data/countries.dart';
+import 'custom_drop_down_item.dart';
 
 import '../../constants/colors.dart';
 

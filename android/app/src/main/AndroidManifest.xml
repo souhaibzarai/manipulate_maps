@@ -3,6 +3,9 @@
         android:label="Manipulate Maps"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyDg9s2SoWVWrDZcdWYO-vbL-73u8CKgw1Q"/>
+               
         <activity
             android:name=".MainActivity"
             android:exported="true"

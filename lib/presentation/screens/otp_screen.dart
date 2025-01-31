@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:manipulate_maps/constants/strings.dart';
+import '../../constants/strings.dart';
 import '../../business_logic/cubit/phone_auth_cubit.dart';
 import '../widgets/otp_field.dart';
 

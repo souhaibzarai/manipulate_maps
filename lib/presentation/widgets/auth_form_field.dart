@@ -25,7 +25,7 @@ class AuthFormField extends StatelessWidget {
         cursorColor: AppColors.darkColor,
         cursorErrorColor: AppColors.errorColor,
         controller: controller,
-        // keyboardType: TextInputType.number,
+        keyboardType: TextInputType.number,
         decoration: InputDecoration(
           contentPadding:
               EdgeInsets.only(left: 10, top: 20, right: 4, bottom: 20),

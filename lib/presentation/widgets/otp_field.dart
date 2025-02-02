@@ -31,7 +31,7 @@ class OTPField extends StatelessWidget {
         selectedColor: AppColors.secondaryColor,
         selectedFillColor: AppColors.transparentColor,
       ),
-      animationDuration: Duration(milliseconds: 300),
+      animationDuration: const Duration(milliseconds: 300),
       onCompleted: (code) {
         print('Completed | code is> $code');
         verifyOTP(code, context);

@@ -27,10 +27,11 @@ class AuthFormField extends StatelessWidget {
         controller: controller,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
-          contentPadding:
-              EdgeInsets.only(left: 10, top: 20, right: 4, bottom: 20),
           hintText: 'Phone Number',
-          hintStyle: TextStyle(fontSize: 13, color: AppColors.headerColor),
+          hintStyle: const TextStyle(
+            fontSize: 13,
+            color: AppColors.headerColor,
+          ),
           border: getInputBorder(AppColors.mainColor),
           enabledBorder: getInputBorder(AppColors.mainColor),
           focusedBorder: getInputBorder(AppColors.activeColor),

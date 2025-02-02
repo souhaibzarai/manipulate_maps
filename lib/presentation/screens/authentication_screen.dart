@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:transparent_image/transparent_image.dart';
+
 import '../../business_logic/cubit/phone_auth_cubit.dart';
-import '../widgets/auth_drop_down.dart';
-import '../widgets/auth_feature_button.dart';
 import '../../constants/colors.dart';
 import '../../constants/strings.dart';
+import '../widgets/auth_drop_down.dart';
+import '../widgets/auth_feature_button.dart';
 import '../widgets/auth_form_field.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   const AuthenticationScreen({super.key});
@@ -103,14 +104,14 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         body: SingleChildScrollView(
           child: Container(
             width: double.infinity,
-            margin: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+            margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Welcome! Sign In',
                     style: TextStyle(
                       fontSize: 18,
@@ -118,7 +119,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                       color: AppColors.headerColor,
                     ),
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   FadeInImage(
                     placeholder: MemoryImage(kTransparentImage),
                     image: NetworkImage(
@@ -127,7 +128,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                     width: double.infinity,
                     height: 250,
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -143,13 +144,13 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                           });
                         },
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       AuthFormField(
                         controller: _phoneNumberController,
                       ),
                     ],
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   AuthFeatureButton(
                     onClickEvent: () {
                       showProgressIndicator(context);

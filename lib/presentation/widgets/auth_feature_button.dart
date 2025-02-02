@@ -25,7 +25,7 @@ class AuthFeatureButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.darkColor,
           foregroundColor: AppColors.thirdColor,
-          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../business_logic/models/country.dart';
 import '../../constants/colors.dart';
 
@@ -19,7 +20,7 @@ class CustomDropDownItem extends StatelessWidget {
               Text(
                 country.flag,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 10,
                 ),
               ),
@@ -27,7 +28,7 @@ class CustomDropDownItem extends StatelessWidget {
           ),
           Text(
             '+${country.phonePrefix}',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 13,
               color: AppColors.darkColor,
             ),

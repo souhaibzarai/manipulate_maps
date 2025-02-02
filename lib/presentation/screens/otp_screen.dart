@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../constants/strings.dart';
-import '../../business_logic/cubit/phone_auth_cubit.dart';
-import '../widgets/otp_field.dart';
 
+import '../../business_logic/cubit/phone_auth_cubit.dart';
 import '../../constants/colors.dart';
+import '../../constants/strings.dart';
+import '../widgets/otp_field.dart';
 
 class OTPScreen extends StatelessWidget {
   const OTPScreen({
@@ -15,7 +15,7 @@ class OTPScreen extends StatelessWidget {
   final dynamic phoneNumber;
 
   void showProgressIndicator(BuildContext context) {
-    AlertDialog alertDialog = AlertDialog(
+    AlertDialog alertDialog = const AlertDialog(
       backgroundColor: AppColors.transparentColor,
       elevation: 0,
       content: Center(
@@ -58,7 +58,7 @@ class OTPScreen extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(errorMessage),
             dismissDirection: DismissDirection.startToEnd,
-            duration: Duration(seconds: 8),
+            duration: const Duration(seconds: 8),
             backgroundColor: AppColors.headerColor,
           ));
         }
@@ -79,14 +79,14 @@ class OTPScreen extends StatelessWidget {
         appBar: AppBar(),
         body: Center(
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 RichText(
                   text: TextSpan(
                       text: 'Enter code sent to ',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 19,
                         fontStyle: FontStyle.italic,
                         color: AppColors.darkColor,
@@ -94,7 +94,7 @@ class OTPScreen extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: phoneNumber,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 19,
                             fontStyle: FontStyle.italic,
                             color: AppColors.headerColor,
@@ -102,11 +102,11 @@ class OTPScreen extends StatelessWidget {
                         ),
                       ]),
                 ),
-                SizedBox(height: 35),
+                const SizedBox(height: 35),
                 OTPField(
                   verifyOTP: verifyOTP,
                 ),
-                SizedBox(height: 35),
+                const SizedBox(height: 35),
                 buildPhoneVerificationBloc(),
               ],
             ),

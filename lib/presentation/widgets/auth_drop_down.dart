@@ -39,12 +39,12 @@ class _AuthDropDownState extends State<AuthDropDown> {
         isExpanded: true,
         decoration: InputDecoration(
           labelText: 'Country code',
-          labelStyle: TextStyle(
+          labelStyle:const  TextStyle(
             fontSize: 12,
             color: AppColors.headerColor,
             overflow: TextOverflow.ellipsis,
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           maintainHintHeight: true,
           border: getInputBorder(AppColors.mainColor),
           enabledBorder: getInputBorder(AppColors.mainColor),

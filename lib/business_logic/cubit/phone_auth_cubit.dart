@@ -34,6 +34,7 @@ class PhoneAuthCubit extends Cubit<PhoneAuthState> {
     emit(ErrorOccurred(
       errorMsg: e.toString(),
     ));
+    print(e.toString());
     reset();
   }
 
@@ -56,6 +57,7 @@ class PhoneAuthCubit extends Cubit<PhoneAuthState> {
           errorMsg: e.toString(),
         ),
       );
+      print(e.toString());
     }
   }
 

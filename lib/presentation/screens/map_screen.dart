@@ -1,13 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:manipulate_maps/constants/strings.dart';
-import 'package:manipulate_maps/helpers/location_helper.dart';
-import 'package:manipulate_maps/presentation/widgets/auth_feature_button.dart';
-import '../../business_logic/cubit/phone_auth_cubit.dart';
+import '../../helpers/location_helper.dart';
+import '../widgets/floating_search_bar.dart';
+import '../widgets/custom_drawer.dart';
+// import '../../business_logic/cubit/phone_auth_cubit.dart';
 import '../../constants/colors.dart';
 
 class MapScreen extends StatefulWidget {
@@ -41,7 +40,7 @@ void showProgressIndicator(BuildContext context) {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  final _phoneAuthCubit = PhoneAuthCubit();
+  // TODO: final _phoneAuthCubit = PhoneAuthCubit();
 
   static Position? location;
   final mapController = Completer<GoogleMapController>();
@@ -75,6 +74,20 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  Widget buildFloatingActionButton() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(0, 0, 10, 30),
+      child: FloatingActionButton(
+        backgroundColor: AppColors.mainColor,
+        onPressed: goToMyCurrentPosition,
+        child: const Icon(
+          Icons.place,
+          color: AppColors.thirdColor,
+        ),
+      ),
+    );
+  }
+
   Future<void> goToMyCurrentPosition() async {
     final GoogleMapController controller = await mapController.future;
 
@@ -90,50 +103,31 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   @override
+  void dispose() {
+    mapController.future.then(
+      (controller) => controller.dispose(),
+    );
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: CustomDrawer(),
         body: Stack(
           children: [
             location != null
                 ? buildGoogleMap()
-                : Center(
+                : const Center(
                     child: CircularProgressIndicator(
                       color: AppColors.headerColor,
                     ),
                   ),
-            Positioned(
-              child: BlocProvider(
-                create: (context) => _phoneAuthCubit,
-                child: AuthFeatureButton(
-                    alignment: Alignment.topCenter,
-                    onClickEvent: () async {
-                      showProgressIndicator(context);
-                      await _phoneAuthCubit.logOut();
-                      if (!context.mounted) {
-                        return;
-                      }
-                      Navigator.pushReplacementNamed(
-                        context,
-                        authScreen,
-                      );
-                    },
-                    text: 'Sign Out'),
-              ),
-            ),
+            FloatingSearchBar(),
           ],
         ),
-        floatingActionButton: Container(
-          margin: EdgeInsets.fromLTRB(0, 0, 10, 30),
-          child: FloatingActionButton(
-            backgroundColor: AppColors.mainColor,
-            onPressed: goToMyCurrentPosition,
-            child: Icon(
-              Icons.place,
-              color: AppColors.thirdColor,
-            ),
-          ),
-        ),
+        floatingActionButton: buildFloatingActionButton(),
       ),
     );
   }

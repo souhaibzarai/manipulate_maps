@@ -1,11 +1,13 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../../helpers/location_helper.dart';
-import '../widgets/floating_search_bar.dart';
-import '../widgets/custom_drawer.dart';
+
 import '../../constants/colors.dart';
+import '../../helpers/location_helper.dart';
+import '../widgets/custom_drawer.dart';
+import '../widgets/floating_search_bar.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -47,16 +49,6 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  static final CameraPosition myLocationCameraPosition = CameraPosition(
-    target: LatLng(
-      location!.latitude,
-      location!.longitude,
-    ),
-    zoom: 15,
-    bearing: 0.0,
-    tilt: 0.0,
-  );
-
   Widget buildGoogleMap() {
     return GoogleMap(
       initialCameraPosition: myLocationCameraPosition,
@@ -74,7 +66,7 @@ class _MapScreenState extends State<MapScreen> {
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 0, 10, 30),
       child: FloatingActionButton(
-        backgroundColor: AppColors.mainColor,
+        backgroundColor: AppColors.mainColor.withAlpha(160),
         onPressed: goToMyCurrentPosition,
         child: const Icon(
           Icons.place,
@@ -106,6 +98,22 @@ class _MapScreenState extends State<MapScreen> {
     super.dispose();
   }
 
+  Future<void> getCurrentLocation() async {
+    location = await LocationHelper.getcurrentPosition;
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  CameraPosition get myLocationCameraPosition {
+    return CameraPosition(
+      target: location != null
+          ? LatLng(location!.latitude, location!.longitude)
+          : const LatLng(0, 0), // Eviter le crash
+      zoom: 15,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -114,12 +122,17 @@ class _MapScreenState extends State<MapScreen> {
         body: Stack(
           children: [
             location != null
-                ? buildGoogleMap()
-                : const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.headerColor,
-                    ),
-                  ),
+                ? GoogleMap(
+                    initialCameraPosition: myLocationCameraPosition,
+                    mapType: MapType.normal,
+                    myLocationEnabled: true,
+                    zoomControlsEnabled: false,
+                    myLocationButtonEnabled: false,
+                    onMapCreated: (GoogleMapController controller) {
+                      mapController.complete(controller);
+                    },
+                  )
+                : const Center(child: CircularProgressIndicator()),
             FloatingSearchBar(),
           ],
         ),

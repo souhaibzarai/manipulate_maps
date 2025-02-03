@@ -1,4 +1,4 @@
-import '../../business_logic/models/country.dart';
+import '../../data/models/country.dart';
 
 final List<Country> allCountries = [
   Country(

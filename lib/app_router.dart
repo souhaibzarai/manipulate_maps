@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'business_logic/cubit/places_cubit.dart';
+import 'data/repository/places_repository.dart';
+import 'data/webservices/places_web_services.dart';
 
 import 'business_logic/cubit/phone_auth_cubit.dart';
 import 'constants/strings.dart';
@@ -9,7 +12,10 @@ import 'presentation/screens/otp_screen.dart';
 
 class AppRouter {
   PhoneAuthCubit? phoneAuthCubit;
+  PlacesRepository? placesRepository;
+  PlacesWebServices placesWebServices = PlacesWebServices();
   AppRouter() {
+    placesRepository = PlacesRepository(placesWebServices);
     phoneAuthCubit = PhoneAuthCubit();
   }
 
@@ -34,18 +40,11 @@ class AppRouter {
 
       case mapScreen:
         return MaterialPageRoute(
-          builder: (context) => MapScreen(),
+          builder: (context) => BlocProvider<PlacesCubit>(
+            create: (context) => PlacesCubit(placesRepository!),
+            child: MapScreen(),
+          ),
         );
-
-      // case authScreen:
-      //   return MaterialPageRoute(
-      //     builder: (context) => AuthenticationScreen(),
-      //   );
-
-      // case otpScreen:
-      //   return MaterialPageRoute(
-      //     builder: (context) => OTPScreen(),
-      //   );
 
       default:
         return null;

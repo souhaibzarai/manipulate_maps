@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../business_logic/models/country.dart';
-import '../../constants/data/countries.dart';
-import 'custom_drop_down_item.dart';
 
 import '../../constants/colors.dart';
+import '../../constants/data/countries.dart';
+import '../../data/models/country.dart';
+import 'custom_drop_down_item.dart';
 
 class AuthDropDown extends StatefulWidget {
   const AuthDropDown({

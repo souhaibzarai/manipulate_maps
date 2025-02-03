@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:manipulate_maps/business_logic/cubit/phone_auth_cubit.dart';
-import 'package:manipulate_maps/constants/colors.dart';
-import 'package:manipulate_maps/constants/strings.dart';
+import '../../business_logic/cubit/phone_auth_cubit.dart';
+import '../../constants/colors.dart';
+import '../../constants/strings.dart';
 
 class CustomDrawer extends StatelessWidget {
   CustomDrawer({super.key});

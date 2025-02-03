@@ -32,16 +32,19 @@ class CustomDrawer extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              '+212 000000000',
-              style: TextStyle(
-                color: AppColors.thirdColor,
-                fontSize: 14,
+            BlocProvider<PhoneAuthCubit>(
+              create: (context) => _phoneAuthCubit,
+              child: Text(
+                '${_phoneAuthCubit.getLoggedUser().phoneNumber}',
+                style: TextStyle(
+                  color: AppColors.thirdColor,
+                  fontSize: 14,
+                ),
               ),
             ),
             const SizedBox(height: 10),
             const Text(
-              'Static Data',
+              '@dev_s0uhaib',
               style: TextStyle(
                 color: AppColors.thirdColor,
                 fontSize: 17,

@@ -1,12 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../helpers/location_helper.dart';
 import '../widgets/floating_search_bar.dart';
 import '../widgets/custom_drawer.dart';
-// import '../../business_logic/cubit/phone_auth_cubit.dart';
 import '../../constants/colors.dart';
 
 class MapScreen extends StatefulWidget {
@@ -40,8 +38,6 @@ void showProgressIndicator(BuildContext context) {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  // TODO: final _phoneAuthCubit = PhoneAuthCubit();
-
   static Position? location;
   final mapController = Completer<GoogleMapController>();
 

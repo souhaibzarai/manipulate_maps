@@ -148,7 +148,7 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                         final lat =
                             state.placeLocation.result.geometry.location.lat;
                         final lng =
-                            state.placeLocation.result.geometry.location.lat;
+                            state.placeLocation.result.geometry.location.lng;
                         Set<Marker> updatedMarkers = {
                           Marker(
                             markerId: MarkerId('$lat $lng'),

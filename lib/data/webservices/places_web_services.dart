@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:manipulate_maps/data/models/place_location.dart';
+
 import '../../constants/strings.dart';
 
 class PlacesWebServices {
@@ -26,6 +28,24 @@ class PlacesWebServices {
     } catch (e) {
       print(e.toString());
       return [];
+    }
+  }
+
+  Future<dynamic> getPlaceLocation(String placeID, String sessiontoken) async {
+    try {
+      final response = await dio.get(
+        placeLocationBaseUrl,
+        queryParameters: {
+          'place_id': placeID,
+          'fields': 'geometry',
+          'key': googleMapAPIKey,
+          'sessiontoken': sessiontoken,
+        },
+      );
+      return response.data;
+    } catch (e) {
+      print(e.toString());
+      return PlaceLocation.fromJson({});
     }
   }
 }

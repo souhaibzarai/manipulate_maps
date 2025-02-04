@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-import '../../data/models/place.dart';
 
 import '../../constants/colors.dart';
+import '../../data/models/place.dart';
 
 class PlaceItem extends StatelessWidget {
-  const PlaceItem({super.key, required this.suggestion});
+  const PlaceItem({
+    super.key,
+    required this.suggestion,
+    required this.onPlaceItemTap,
+  });
 
   final Place suggestion;
+
+  final void Function() onPlaceItemTap;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +25,7 @@ class PlaceItem extends StatelessWidget {
       ),
       color: AppColors.thirdColor.withAlpha(200), // Fond léger
       child: ListTile(
+        style: ListTileStyle.drawer,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: Container(
           width: 45,
@@ -59,9 +66,7 @@ class PlaceItem extends StatelessWidget {
           color: AppColors.mainColor.withAlpha(160),
           size: 16,
         ),
-        onTap: () {
-          // Ajoutez ici une action lorsqu'on clique sur un élément de la liste
-        },
+        onTap: onPlaceItemTap,
       ),
     );
   }

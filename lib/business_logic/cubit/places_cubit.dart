@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:manipulate_maps/data/models/place_location.dart';
+import '../../data/models/place.dart';
 import '../../data/repository/places_repository.dart';
 import 'package:meta/meta.dart';
 
@@ -10,12 +12,16 @@ class PlacesCubit extends Cubit<PlacesState> {
   final PlacesRepository placesRepository;
 
   Future<void> emitAllSuggestions(String input, String sessionToken) async {
-    try {
-      final suggestions =
-          await placesRepository.fetchPlaces(input, sessionToken);
+    placesRepository.fetchPlaces(input, sessionToken).then((suggestions) {
       emit(PlacesLoaded(suggestions));
-    } catch (error) {
-      emit(PlacesError(error.toString()));
-    }
+    });
+  }
+
+  Future<void> emitPlacePosition(String placeID, String sessiontoken) async {
+    placesRepository
+        .getPlaceLocation(placeID, sessiontoken)
+        .then((placeLocation) {
+      emit(PlaceLocationLoaded(placeLocation));
+    });
   }
 }

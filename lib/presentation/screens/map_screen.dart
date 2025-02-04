@@ -41,12 +41,22 @@ void showProgressIndicator(BuildContext context) {
 
 class _MapScreenState extends State<MapScreen> {
   static Position? location;
-  final mapController = Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
 
-  Future<void> get currentLocation async {
-    location = await LocationHelper.getcurrentPosition.whenComplete(() {
-      setState(() {});
+  Set<Marker> _markers = {};
+  void _updateMarkers(Set<Marker> newMarkers) {
+    setState(() {
+      _markers = newMarkers;
     });
+
+    // Move the camera to the first marker (if available)
+    if (newMarkers.isNotEmpty) {
+      final marker = newMarkers.first;
+      _controller.future.then((GoogleMapController controller) {
+        controller.animateCamera(CameraUpdate.newLatLng(marker.position));
+      });
+    }
   }
 
   Widget buildGoogleMap() {
@@ -56,8 +66,9 @@ class _MapScreenState extends State<MapScreen> {
       myLocationEnabled: true,
       zoomControlsEnabled: false,
       myLocationButtonEnabled: false,
+      markers: _markers,
       onMapCreated: (GoogleMapController controller) {
-        mapController.complete(controller);
+        _controller.complete(controller);
       },
     );
   }
@@ -77,7 +88,11 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> goToMyCurrentPosition() async {
-    final GoogleMapController controller = await mapController.future;
+    setState(() {
+      _markers = {};
+    });
+
+    final GoogleMapController controller = await _controller.future;
 
     controller.animateCamera(
       CameraUpdate.newCameraPosition(myLocationCameraPosition),
@@ -87,22 +102,21 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    currentLocation;
+    getCurrentLocation();
   }
 
   @override
   void dispose() {
-    mapController.future.then(
+    _controller.future.then(
       (controller) => controller.dispose(),
     );
     super.dispose();
   }
 
   Future<void> getCurrentLocation() async {
-    location = await LocationHelper.getcurrentPosition;
-    if (mounted) {
+    location = await LocationHelper.getcurrentPosition.whenComplete(() {
       setState(() {});
-    }
+    });
   }
 
   CameraPosition get myLocationCameraPosition {
@@ -122,18 +136,11 @@ class _MapScreenState extends State<MapScreen> {
         body: Stack(
           children: [
             location != null
-                ? GoogleMap(
-                    initialCameraPosition: myLocationCameraPosition,
-                    mapType: MapType.normal,
-                    myLocationEnabled: true,
-                    zoomControlsEnabled: false,
-                    myLocationButtonEnabled: false,
-                    onMapCreated: (GoogleMapController controller) {
-                      mapController.complete(controller);
-                    },
-                  )
+                ? buildGoogleMap()
                 : const Center(child: CircularProgressIndicator()),
-            FloatingSearchBar(),
+            FloatingSearchBar(
+              onMarkersUpdated: _updateMarkers,
+            ),
           ],
         ),
         floatingActionButton: buildFloatingActionButton(),

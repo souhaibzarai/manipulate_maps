@@ -6,7 +6,7 @@ abstract class PlacesState {}
 class PlacesInitial extends PlacesState {}
 
 class PlacesLoaded extends PlacesState {
-  final List<dynamic> places;
+  final List<Place> places;
 
   PlacesLoaded(this.places);
 }
@@ -15,4 +15,16 @@ class PlacesError extends PlacesState {
   final String message;
 
   PlacesError(this.message);
+}
+
+class PlaceLocationLoaded extends PlacesState {
+  final PlaceLocation placeLocation;
+
+  PlaceLocationLoaded(this.placeLocation);
+}
+
+class PlaceLocationError extends PlacesState {
+  final String errorMsg;
+
+  PlaceLocationError(this.errorMsg);
 }

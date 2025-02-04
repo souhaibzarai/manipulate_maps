@@ -4,3 +4,7 @@ const mapScreen = '/map-screen';
 const googleMapAPIKey = 'AIzaSyDFa6OVxlIgTUqk0YMK9vQ_6aAMRlsO2VQ';
 const placesBaseUrl =
     'https://maps.googleapis.com/maps/api/place/queryautocomplete/json';
+const placeLocationBaseUrl =
+    'https://maps.googleapis.com/maps/api/place/details/json';
+
+

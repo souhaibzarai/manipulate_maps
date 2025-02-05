@@ -5,6 +5,8 @@ import '../../business_logic/cubit/phone_auth_cubit.dart';
 import '../../constants/colors.dart';
 import '../../constants/strings.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
 class CustomDrawer extends StatelessWidget {
   CustomDrawer({super.key});
 
@@ -57,6 +59,30 @@ class CustomDrawer extends StatelessWidget {
     );
   }
 
+  /// A helper method to build individual list tiles.
+  Widget _buildListTile(BuildContext context,
+      {required IconData icon,
+      required String title,
+      VoidCallback? onTap,
+      bool? isLogout = false}) {
+    return ListTile(
+      leading: Icon(
+        size: 22,
+        icon,
+        color: isLogout! ? AppColors.errorColor : AppColors.darkColor,
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: AppColors.darkColor,
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+      onTap: onTap,
+    );
+  }
+
   /// Builds a list of action tiles.
   Widget _buildActions(BuildContext context) {
     return Expanded(
@@ -85,6 +111,7 @@ class CustomDrawer extends StatelessWidget {
             context,
             icon: Icons.logout,
             title: 'Logout',
+            isLogout: true,
             onTap: () async {
               BlocProvider<PhoneAuthCubit>(
                 create: (create) => _phoneAuthCubit,
@@ -105,44 +132,43 @@ class CustomDrawer extends StatelessWidget {
     );
   }
 
-  /// A helper method to build individual list tiles.
-  Widget _buildListTile(BuildContext context,
-      {required IconData icon, required String title, VoidCallback? onTap}) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      onTap: onTap,
-    );
-  }
-
   /// Builds the social media links row using Font Awesome icons.
-  Widget _buildSocialMediaLinks() {
+  Widget _buildSocialMediaLinks(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: const FaIcon(FontAwesomeIcons.facebook),
+            icon: const FaIcon(FontAwesomeIcons.github),
             onPressed: () {
-              // Handle Facebook action.
+              _launchURL(githubUrl);
             },
           ),
           IconButton(
             icon: const FaIcon(FontAwesomeIcons.telegram),
             onPressed: () {
-              // Handle Telegram action.
+              _launchURL(telegramUrl);
             },
           ),
           IconButton(
             icon: const FaIcon(FontAwesomeIcons.youtube),
             onPressed: () {
-              // Handle YouTube action.
+              _launchURL(youtubeUrl);
             },
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -153,7 +179,7 @@ class CustomDrawer extends StatelessWidget {
           _buildHeader(),
           SizedBox(height: 30),
           _buildActions(context),
-          _buildSocialMediaLinks(),
+          _buildSocialMediaLinks(context),
         ],
       ),
     );

@@ -8,3 +8,7 @@ const placeLocationBaseUrl =
     'https://maps.googleapis.com/maps/api/place/details/json';
 const directionsBaseUrl =
     'https://maps.googleapis.com/maps/api/directions/json';
+
+const githubUrl = 'https://github.com/souhaibzarai';
+const telegramUrl = 'https://t.me/ruzinx';
+const youtubeUrl = 'https://youtube.com/@letsCodeWithRuzinx';

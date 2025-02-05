@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../data/models/place.dart';
 import 'package:uuid/uuid.dart';
@@ -14,9 +15,12 @@ class FloatingSearchBar extends StatefulWidget {
   const FloatingSearchBar({
     super.key,
     required this.onMarkersUpdated,
+    required this.position,
   });
 
   final void Function(Set<Marker>) onMarkersUpdated;
+
+  final Position position;
 
   @override
   State<FloatingSearchBar> createState() => _FloatingSearchBarState();
@@ -24,6 +28,9 @@ class FloatingSearchBar extends StatefulWidget {
 
 class _FloatingSearchBarState extends State<FloatingSearchBar> {
   Set<Marker> markers = {};
+  Set<Marker> emptyMarkers = {};
+
+  Set<Marker>? updatedMarkers;
 
   final FocusNode _focusNode = FocusNode();
   final TextEditingController searchController = TextEditingController();
@@ -44,8 +51,10 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
       searchController.clear();
       places.clear();
       isSearchOverlayVisible = false;
+      updatedMarkers = {};
     });
     _focusNode.unfocus();
+    widget.onMarkersUpdated(emptyMarkers);
   }
 
   void fetchSuggestions(String query) {
@@ -120,6 +129,29 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
     return const SizedBox();
   }
 
+  void onMarkerTap() {
+    final markerPositon = widget.position;
+
+    setState(() {
+      updatedMarkers = updatedMarkers ?? {};
+      updatedMarkers!.add(
+        Marker(
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose),
+          infoWindow: InfoWindow(title: 'My current location'),
+          markerId: MarkerId('current_location'),
+          position: LatLng(
+            markerPositon.latitude,
+            markerPositon.longitude,
+          ),
+        ),
+      );
+    });
+
+    widget.onMarkersUpdated(updatedMarkers!);
+  }
+
+  // void onTextFieldRequestFocus()
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -149,28 +181,43 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                             state.placeLocation.result.geometry.location.lat;
                         final lng =
                             state.placeLocation.result.geometry.location.lng;
-                        Set<Marker> updatedMarkers = {
+                        updatedMarkers = {
                           Marker(
                             markerId: MarkerId('$lat $lng'),
+                            infoWindow:
+                                InfoWindow(title: searchController.value.text),
                             icon: BitmapDescriptor.defaultMarkerWithHue(
                                 BitmapDescriptor.hueRed),
                             position: LatLng(lat, lng),
+                            onTap: onMarkerTap,
                           ),
                         };
-                        widget.onMarkersUpdated(updatedMarkers);
+                        widget.onMarkersUpdated(updatedMarkers!);
                       }
                     },
                     child: TextField(
                       controller: searchController,
                       focusNode: _focusNode,
                       onChanged: fetchSuggestions,
-                      onTap: () =>
-                          setState(() => isSearchOverlayVisible = true),
+                      onTap: () {
+                        setState(() {
+                          isSearchOverlayVisible = true;
+                          updatedMarkers = {};
+                        });
+                        widget.onMarkersUpdated(emptyMarkers);
+                      },
                       decoration: InputDecoration(
                         hintText: 'Search for a location...',
                         hintStyle: TextStyle(color: AppColors.darkColor),
-                        prefixIcon: const Icon(Icons.search,
-                            color: AppColors.darkColor),
+                        prefixIcon: IconButton(
+                          icon: Icon(
+                            Icons.menu,
+                            color: AppColors.secondaryColor,
+                          ),
+                          onPressed: () {
+                            Scaffold.of(context).openDrawer();
+                          },
+                        ),
                         suffixIcon: IconButton(
                           style: ButtonStyle(
                               iconColor:
@@ -185,7 +232,7 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                             searchController.text.isNotEmpty ||
                                     isSearchOverlayVisible
                                 ? Icons.clear
-                                : null,
+                                : Icons.search,
                           ),
                         ),
                         border: InputBorder.none,

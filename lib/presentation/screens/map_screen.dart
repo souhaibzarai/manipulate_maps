@@ -138,9 +138,12 @@ class _MapScreenState extends State<MapScreen> {
             location != null
                 ? buildGoogleMap()
                 : const Center(child: CircularProgressIndicator()),
-            FloatingSearchBar(
-              onMarkersUpdated: _updateMarkers,
-            ),
+            location != null
+                ? FloatingSearchBar(
+                    onMarkersUpdated: _updateMarkers,
+                    position: location!,
+                  )
+                : const SizedBox(),
           ],
         ),
         floatingActionButton: buildFloatingActionButton(),

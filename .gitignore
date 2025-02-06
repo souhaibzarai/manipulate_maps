@@ -78,4 +78,4 @@ app.*.map.json
 !assets/
 !android
 
-lib/constants/
+# lib/constants/

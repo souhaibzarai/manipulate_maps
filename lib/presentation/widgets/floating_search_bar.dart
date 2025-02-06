@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:manipulate_maps/data/models/directions.dart';
 import '../../data/models/place.dart';
 import 'package:uuid/uuid.dart';
 
@@ -32,13 +31,12 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
   Set<Marker> markers = {};
   Set<Marker> emptyMarkers = {};
 
-  Directions? placeDirections; //TODO:
   List<LatLng> polylinePoints = [];
   var isSearchedPlaceMarkerClicked = false;
   var isTimeAndDistanceVisible = false;
 
-  late String duration;
-  late String distance;
+  String duration = '';
+  String distance = '';
 
   late Position markerPositon;
 
@@ -164,31 +162,20 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
     });
 
     widget.onMarkersUpdated(updatedMarkers!);
-
-    BlocListener<PlacesCubit, PlacesState>(
-      listenWhen: (prev, current) => prev != current,
-      listener: (context, state) {
-        if (state is PlaceDirectionLoaded) {
-          placeDirections = state.directions;
-
-          polylinePoints = placeDirections!.polylinePoints.map((point) {
-            return LatLng(point.latitude, point.longitude);
-          }).toList();
-        }
-      },
-    );
   }
 
-  void getDirections(LatLng destination) {
+  void getDirections(LatLng destination) async {
     LatLng origin = LatLng(
       markerPositon.latitude,
       markerPositon.longitude,
     );
 
-    BlocProvider.of<PlacesCubit>(context).emitPlaceDirections(
-      origin,
-      destination,
-    );
+    try {
+      await BlocProvider.of<PlacesCubit>(context)
+          .emitPlaceDirections(origin, destination);
+    } catch (e) {
+      print('Error getting directions: $e');
+    }
   }
 
   Widget buildPlaceLocationBloc({required Widget child}) {
@@ -198,6 +185,8 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
         if (state is PlaceLocationLoaded) {
           final lat = state.placeLocation.result.geometry.location.lat;
           final lng = state.placeLocation.result.geometry.location.lng;
+          getDirections(LatLng(lat, lng));
+
           updatedMarkers = {
             Marker(
               markerId: MarkerId('$lat $lng'),
@@ -207,23 +196,41 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
               position: LatLng(lat, lng),
               onTap: () {
                 buildCurrentLocationMarker();
-                widget.onGetDirection(
-                  {
-                    Polyline(
-                      polylineId: PolylineId('direction_polyline'),
-                      width: 5,
-                      color: AppColors.activeColor,
-                      points: polylinePoints,
-                    ),
-                  },
-                );
-                isSearchedPlaceMarkerClicked = isTimeAndDistanceVisible = true;
+
+                final currentState =
+                    BlocProvider.of<PlacesCubit>(context).state;
+
+                if (currentState is PlaceDirectionLoaded) {
+                  duration = currentState.directions.duration;
+                  distance = currentState.directions.distance;
+                  polylinePoints = currentState.directions.polylinePoints.map(
+                    (point) {
+                      return LatLng(point.latitude, point.longitude);
+                    },
+                  ).toList();
+                  print('Converted Polyline Points: $polylinePoints');
+
+                  widget.onGetDirection(
+                    {
+                      Polyline(
+                        polylineId: PolylineId('direction_polyline'),
+                        width: 5,
+                        color: AppColors.secondaryColor,
+                        points: polylinePoints,
+                      ),
+                    },
+                  );
+                  setState(() {
+                    isSearchedPlaceMarkerClicked = true;
+                    isTimeAndDistanceVisible = true;
+                  });
+                } else {
+                  print('No directions available');
+                }
               },
             ),
           };
           widget.onMarkersUpdated(updatedMarkers!);
-
-          getDirections(LatLng(lat, lng));
         }
       },
       child: child,
@@ -236,6 +243,55 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
       updatedMarkers = {};
     });
     widget.onMarkersUpdated(emptyMarkers);
+  }
+
+  Widget buildTimeAndDuration(String duration, String distance) {
+    return GestureDetector(
+      onTap: () {},
+      child: Positioned(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: AppColors.secondaryColor.withAlpha(230), // Meilleure opacité
+            borderRadius: BorderRadius.circular(12), // Coins arrondis
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.darkColor.withAlpha(100), // Ombre plus douce
+                blurRadius: 8,
+                offset: Offset(2, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.access_time,
+                  color: Colors.white, size: 18), // Icône durée
+              SizedBox(width: 6),
+              Text(
+                duration,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white, // Meilleur contraste
+                ),
+              ),
+              SizedBox(width: 12), // Espacement entre les éléments
+              Icon(Icons.location_on,
+                  color: Colors.white, size: 18), // Icône distance
+              SizedBox(width: 6),
+              Text(
+                distance,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -317,7 +373,12 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                       child: buildSearchBloc(),
                     ),
                   ),
-               
+                SizedBox(height: isTimeAndDistanceVisible ? 10 : 0),
+                !isSearchOverlayVisible &&
+                        isTimeAndDistanceVisible &&
+                        isSearchedPlaceMarkerClicked
+                    ? buildTimeAndDuration(duration, distance)
+                    : SizedBox(),
               ],
             ),
           ),

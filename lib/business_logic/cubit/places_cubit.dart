@@ -28,8 +28,15 @@ class PlacesCubit extends Cubit<PlacesState> {
   }
 
   Future<void> emitPlaceDirections(LatLng origin, LatLng destination) async {
-    placesRepository.getDirections(origin, destination).then((directions) {
+    try {
+      final directions =
+          await placesRepository.getDirections(origin, destination);
+
+      print('Data recieved : $directions');
+
       emit(PlaceDirectionLoaded(directions: directions));
-    });
+    } catch (e) {
+      print('Exception, data not recieved: $e');
+    }
   }
 }

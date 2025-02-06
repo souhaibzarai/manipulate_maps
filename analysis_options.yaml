@@ -13,14 +13,6 @@
 #   errors:
 #     avoid_print: ignore
 # # here end of deleting
-
-
-# delete this
-analyzer:
-  errors:
-    avoid_print: ignore
-    must_be_immutable: ignore
-    #till here
 include: package:flutter_lints/flutter.yaml
 
 linter:

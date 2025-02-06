@@ -70,7 +70,9 @@ class _MapScreenState extends State<MapScreen> {
     return GoogleMap(
       initialCameraPosition: myLocationCameraPosition,
       mapType: MapType.normal,
+      buildingsEnabled: true,
       myLocationEnabled: true,
+      mapToolbarEnabled: false,
       zoomControlsEnabled: false,
       myLocationButtonEnabled: false,
       markers: _markers,
@@ -80,8 +82,6 @@ class _MapScreenState extends State<MapScreen> {
       },
     );
   }
-
-  bool? floatingButtonClicked;
 
   Widget buildFloatingActionButton() {
     return Container(
@@ -98,12 +98,6 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> goToMyCurrentPositionAndClearUi() async {
-    setState(() {
-      floatingButtonClicked = true;
-      _markers = {};
-      _polylines = {};
-    });
-
     final GoogleMapController controller = await _controller.future;
 
     controller.animateCamera(
@@ -155,7 +149,6 @@ class _MapScreenState extends State<MapScreen> {
                     onMarkersUpdated: _updateMarkers,
                     position: location!,
                     onGetDirection: _updatePolyline,
-                    isFloatingButtonCLicked: floatingButtonClicked,
                   )
                 : const SizedBox(),
           ],

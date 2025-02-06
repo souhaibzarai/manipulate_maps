@@ -33,7 +33,6 @@ class PlacesRepository {
     final direction =
         await placesWebServices.getDirections(origin, destination);
 
-    print('directions call is: $direction');
 
     return Directions.fromJson(direction);
   }

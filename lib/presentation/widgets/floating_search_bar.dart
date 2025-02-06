@@ -9,16 +9,14 @@ import '../../business_logic/cubit/places_cubit.dart';
 import '../../constants/colors.dart';
 import 'place_item.dart';
 
+// ignore: must_be_immutable
 class FloatingSearchBar extends StatefulWidget {
-  FloatingSearchBar({
+  const FloatingSearchBar({
     super.key,
     required this.onMarkersUpdated,
     required this.position,
     required this.onGetDirection,
-    this.isFloatingButtonCLicked = false,
   });
-
-  bool? isFloatingButtonCLicked;
 
   final void Function(Set<Marker>) onMarkersUpdated;
 
@@ -70,10 +68,13 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
       searchController.clear();
       places.clear();
       isSearchOverlayVisible = false;
+      isTimeAndDistanceVisible = false;
       updatedMarkers = {};
+      polylinePoints = [];
     });
     _focusNode.unfocus();
     widget.onMarkersUpdated(emptyMarkers);
+    widget.onGetDirection({});
   }
 
   void fetchSuggestions(String query) {
@@ -177,7 +178,7 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
       await BlocProvider.of<PlacesCubit>(context)
           .emitPlaceDirections(origin, destination);
     } catch (e) {
-      print('Error getting directions: $e');
+      throw Exception('Error getting directions: $e');
     }
   }
 
@@ -198,6 +199,10 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                   BitmapDescriptor.hueRed),
               position: LatLng(lat, lng),
               onTap: () {
+                setState(() {
+                  isSearchedPlaceMarkerClicked = true;
+                  isTimeAndDistanceVisible = true;
+                });
                 buildCurrentLocationMarker();
 
                 final currentState =
@@ -213,8 +218,6 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                     },
                   ).toList();
 
-                  print('Converted Polyline Points: $polylinePoints');
-
                   widget.onGetDirection(
                     {
                       Polyline(
@@ -225,12 +228,6 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                       ),
                     },
                   );
-                  setState(() {
-                    isSearchedPlaceMarkerClicked = true;
-                    isTimeAndDistanceVisible = true;
-                  });
-                } else {
-                  print('No directions available');
                 }
               },
             ),
@@ -245,6 +242,7 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
   void removeAllMarkersAndUpdateUi() {
     setState(() {
       isSearchOverlayVisible = true;
+      isTimeAndDistanceVisible = false;
       updatedMarkers = {};
       polylinePoints = [];
     });
@@ -252,51 +250,99 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
     widget.onMarkersUpdated(emptyMarkers);
   }
 
+  // Widget buildTimeAndDuration(String duration, String distance) {
+  //   return GestureDetector(
+  //     onTap: () {},
+  //     child: Positioned(
+  //       top: 0,
+  //       bottom: 500,
+  //       left: 0,
+  //       right: 0,
+  //       child: Container(
+  //         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+  //         decoration: BoxDecoration(
+  //           color: AppColors.secondaryColor.withAlpha(230), // Meilleure opacité
+  //           borderRadius: BorderRadius.circular(12), // Coins arrondis
+  //           boxShadow: [
+  //             BoxShadow(
+  //               color: AppColors.darkColor.withAlpha(100), // Ombre plus douce
+  //               blurRadius: 8,
+  //               offset: Offset(2, 4),
+  //             ),
+  //           ],
+  //         ),
+  //         child: Row(
+  //           children: [
+  //             Icon(Icons.access_time,
+  //                 color: AppColors.thirdColor, size: 18), // Icône durée
+  //             SizedBox(width: 6),
+  //             Text(
+  //               duration,
+  //               style: TextStyle(
+  //                 fontSize: 14,
+  //                 fontWeight: FontWeight.bold,
+  //                 color: AppColors.thirdColor, // Meilleur contraste
+  //               ),
+  //             ),
+  //             Spacer(),
+  //             Icon(Icons.location_on,
+  //                 color: AppColors.thirdColor, size: 18), // Icône distance
+  //             SizedBox(width: 6),
+  //             Text(
+  //               distance,
+  //               style: TextStyle(
+  //                 fontSize: 14,
+  //                 fontWeight: FontWeight.bold,
+  //                 color: AppColors.thirdColor,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
   Widget buildTimeAndDuration(String duration, String distance) {
-    return GestureDetector(
-      onTap: () {},
-      child: Positioned(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: AppColors.secondaryColor.withAlpha(230), // Meilleure opacité
-            borderRadius: BorderRadius.circular(12), // Coins arrondis
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.darkColor.withAlpha(100), // Ombre plus douce
-                blurRadius: 8,
-                offset: Offset(2, 4),
-              ),
-            ],
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.secondaryColor.withAlpha(230),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.darkColor.withAlpha(100),
+            blurRadius: 8,
+            offset: const Offset(2, 4),
           ),
-          child: Row(
-            children: [
-              Icon(Icons.access_time,
-                  color: Colors.white, size: 18), // Icône durée
-              SizedBox(width: 6),
-              Text(
-                duration,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white, // Meilleur contraste
-                ),
-              ),
-              Spacer(),
-              Icon(Icons.location_on,
-                  color: Colors.white, size: 18), // Icône distance
-              SizedBox(width: 6),
-              Text(
-                distance,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Icon(Icons.access_time, color: AppColors.thirdColor, size: 18),
+          const SizedBox(width: 6),
+          Text(
+            duration,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: AppColors.thirdColor,
+            ),
           ),
-        ),
+          const Spacer(),
+          Icon(Icons.location_on, color: AppColors.thirdColor, size: 18),
+          const SizedBox(width: 6),
+          Text(
+            distance,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: AppColors.thirdColor,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -309,7 +355,6 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
       onTap: () {
         _focusNode.unfocus();
         setState(() {
-          isSearchedPlaceMarkerClicked = false;
           isTimeAndDistanceVisible = false;
         });
       },
@@ -382,13 +427,9 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                     ),
                   ),
                 SizedBox(height: isTimeAndDistanceVisible ? 10 : 0),
-                (!isSearchOverlayVisible &&
-                            isTimeAndDistanceVisible &&
-                            isSearchedPlaceMarkerClicked &&
-                            polylinePoints.isNotEmpty) &&
-                        !(widget.isFloatingButtonCLicked ??= false)
+                isTimeAndDistanceVisible
                     ? buildTimeAndDuration(duration, distance)
-                    : SizedBox(),
+                    : SizedBox.shrink(),
               ],
             ),
           ),

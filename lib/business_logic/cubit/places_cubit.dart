@@ -32,11 +32,9 @@ class PlacesCubit extends Cubit<PlacesState> {
       final directions =
           await placesRepository.getDirections(origin, destination);
 
-      print('Data recieved : $directions');
-
       emit(PlaceDirectionLoaded(directions: directions));
     } catch (e) {
-      print('Exception, data not recieved: $e');
+      throw Exception('Exception, data not recieved: $e');
     }
   }
 }

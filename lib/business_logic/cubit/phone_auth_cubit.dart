@@ -34,7 +34,6 @@ class PhoneAuthCubit extends Cubit<PhoneAuthState> {
     emit(ErrorOccurred(
       errorMsg: e.toString(),
     ));
-    print(e.toString());
     reset();
   }
 
@@ -44,7 +43,6 @@ class PhoneAuthCubit extends Cubit<PhoneAuthState> {
   }
 
   void codeAutoRetrievalTimeout(String verificationId) {
-    print('codeAutoRetrievalTimeout');
   }
 
   Future<void> authenticateUser(PhoneAuthCredential credential) async {
@@ -57,7 +55,6 @@ class PhoneAuthCubit extends Cubit<PhoneAuthState> {
           errorMsg: e.toString(),
         ),
       );
-      print(e.toString());
     }
   }
 

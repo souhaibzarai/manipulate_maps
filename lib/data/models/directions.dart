@@ -39,7 +39,7 @@ class Directions {
     }
 
     final String polylinePoints = data['overview_polyline']['points'];
-    print("Polyline points: $polylinePoints"); // Vérifier la polyline
+    // Vérifier la polyline
 
     return Directions(
       polylinePoints: PolylinePoints().decodePolyline(polylinePoints),

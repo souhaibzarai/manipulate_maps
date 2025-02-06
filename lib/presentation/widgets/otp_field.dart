@@ -33,9 +33,7 @@ class OTPField extends StatelessWidget {
       ),
       animationDuration: const Duration(milliseconds: 300),
       onCompleted: (code) {
-        print('Completed | code is> $code');
         verifyOTP(code, context);
-        print('code sent');
       },
       enableActiveFill: true,
     );

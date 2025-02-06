@@ -32,6 +32,8 @@ class AuthFormField extends StatelessWidget {
             fontSize: 13,
             color: AppColors.headerColor,
           ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           border: getInputBorder(AppColors.mainColor),
           enabledBorder: getInputBorder(AppColors.mainColor),
           focusedBorder: getInputBorder(AppColors.activeColor),

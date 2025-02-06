@@ -27,8 +27,7 @@ class PlacesWebServices {
       });
       return response.data['predictions'];
     } catch (e) {
-      print(e.toString());
-      return [];
+      throw Exception(e.toString());
     }
   }
 
@@ -45,7 +44,6 @@ class PlacesWebServices {
       );
       return response.data;
     } catch (e) {
-      print(e.toString());
       return PlaceLocation.fromJson({});
     }
   }
@@ -63,7 +61,6 @@ class PlacesWebServices {
 
       return response.data;
     } catch (e) {
-      print("Error fetching directions: $e");
       throw Exception('Failed to load directions');
     }
   }

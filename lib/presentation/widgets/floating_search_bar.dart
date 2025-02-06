@@ -8,7 +8,6 @@ import 'package:uuid/uuid.dart';
 
 import '../../business_logic/cubit/places_cubit.dart';
 import '../../constants/colors.dart';
-import 'distance_and_duration.dart';
 import 'place_item.dart';
 
 class FloatingSearchBar extends StatefulWidget {

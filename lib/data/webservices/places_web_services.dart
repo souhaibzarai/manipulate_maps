@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:manipulate_maps/data/models/directions.dart';
 import 'package:manipulate_maps/data/models/place_location.dart';
 
 import '../../constants/strings.dart';

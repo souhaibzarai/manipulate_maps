@@ -1,29 +1,5 @@
 {
-  "project_info": {
-    "project_number": "834606346985",
-    "project_id": "manipulate-maps-8587a",
-    "storage_bucket": "manipulate-maps-8587a.firebasestorage.app"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:834606346985:android:93ee62f91e2a5db6c8b678",
-        "android_client_info": {
-          "package_name": "com.example.manipulate_maps"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBC1tghF4xMTVn870BfcZ2ptllhYfNGe_Y"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    }
-  ],
-  "configuration_version": "1"
+  "set your": {
+    "google-services.json": "here"
+  }
 }

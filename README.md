@@ -1,16 +1,31 @@
-# manipulate_maps
+# Manipulate Maps
 
-A new Flutter project.
+A Flutter application that demonstrates Google Maps integration with Firebase services.
+
+## Setup Requirements
+
+Before running the project, you need to:
+
+1. Replace the Google Maps API key:
+   - In `android/app/src/main/AndroidManifest.xml`
+   - In `lib/constants/strings.dart`
+
+2. Set up Firebase:
+   - Add your own `google-services.json` to `android/app/`
+   - Configure Firebase in your Google Cloud Console
+   - Set up required Firebase services (Authentication)
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1. Clone the repository
+2. Replace all API keys and Firebase configuration files with your own
+3. Run `flutter pub get`
+4. Build and run the application
 
-A few resources to get you started if this is your first Flutter project:
+## Note
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+This project is open for anyone to use and modify. Make sure to replace all configuration files and API keys with your own to ensure proper functionality.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## License
+
+This project is open source and available for public use.

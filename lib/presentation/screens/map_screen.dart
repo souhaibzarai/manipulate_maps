@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../constants/colors.dart';
 import '../../helpers/location_helper.dart';
 import '../widgets/custom_drawer.dart';
+
 import '../widgets/floating_search_bar.dart';
 
 class MapScreen extends StatefulWidget {
@@ -44,19 +44,26 @@ class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
+  late Set<Polyline> _polylines = {};
+
   Set<Marker> _markers = {};
   void _updateMarkers(Set<Marker> newMarkers) {
     setState(() {
       _markers = newMarkers;
     });
 
-    // Move the camera to the first marker (if available)
     if (newMarkers.isNotEmpty) {
       final marker = newMarkers.first;
       _controller.future.then((GoogleMapController controller) {
         controller.animateCamera(CameraUpdate.newLatLng(marker.position));
       });
     }
+  }
+
+  void _updatePolyline(Set<Polyline> newPolylines) {
+    setState(() {
+      _polylines = newPolylines;
+    });
   }
 
   Widget buildGoogleMap() {
@@ -67,6 +74,7 @@ class _MapScreenState extends State<MapScreen> {
       zoomControlsEnabled: false,
       myLocationButtonEnabled: false,
       markers: _markers,
+      polylines: _polylines,
       onMapCreated: (GoogleMapController controller) {
         _controller.complete(controller);
       },
@@ -142,6 +150,7 @@ class _MapScreenState extends State<MapScreen> {
                 ? FloatingSearchBar(
                     onMarkersUpdated: _updateMarkers,
                     position: location!,
+                    onGetDirection: _updatePolyline,
                   )
                 : const SizedBox(),
           ],

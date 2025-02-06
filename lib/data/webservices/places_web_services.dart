@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:manipulate_maps/data/models/directions.dart';
 import 'package:manipulate_maps/data/models/place_location.dart';
 
 import '../../constants/strings.dart';
@@ -46,6 +48,24 @@ class PlacesWebServices {
     } catch (e) {
       print(e.toString());
       return PlaceLocation.fromJson({});
+    }
+  }
+
+  Future<dynamic> getDirections(LatLng origin, LatLng destination) async {
+    try {
+      final response = await dio.get(
+        directionsBaseUrl,
+        queryParameters: {
+          'origin': '${origin.latitude},${origin.longitude}',
+          'destination': '${destination.latitude},${destination.longitude}',
+          'key': googleMapAPIKey,
+        },
+      );
+
+      return response.data;
+    } catch (e) {
+      print("Error fetching directions: $e");
+      throw Exception('Failed to load directions');
     }
   }
 }

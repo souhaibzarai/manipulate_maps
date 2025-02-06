@@ -1,14 +1,14 @@
-// ignore_for_file: avoid_print TODO:
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:manipulate_maps/data/models/directions.dart';
 import '../../data/models/place.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../business_logic/cubit/places_cubit.dart';
 import '../../constants/colors.dart';
+import 'distance_and_duration.dart';
 import 'place_item.dart';
 
 class FloatingSearchBar extends StatefulWidget {
@@ -16,11 +16,14 @@ class FloatingSearchBar extends StatefulWidget {
     super.key,
     required this.onMarkersUpdated,
     required this.position,
+    required this.onGetDirection,
   });
 
   final void Function(Set<Marker>) onMarkersUpdated;
 
   final Position position;
+
+  final void Function(Set<Polyline>) onGetDirection;
 
   @override
   State<FloatingSearchBar> createState() => _FloatingSearchBarState();
@@ -29,6 +32,16 @@ class FloatingSearchBar extends StatefulWidget {
 class _FloatingSearchBarState extends State<FloatingSearchBar> {
   Set<Marker> markers = {};
   Set<Marker> emptyMarkers = {};
+
+  Directions? placeDirections; //TODO:
+  List<LatLng> polylinePoints = [];
+  var isSearchedPlaceMarkerClicked = false;
+  var isTimeAndDistanceVisible = false;
+
+  late String duration;
+  late String distance;
+
+  late Position markerPositon;
 
   Set<Marker>? updatedMarkers;
 
@@ -44,6 +57,12 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
     searchController.dispose();
     _focusNode.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    markerPositon = widget.position;
+    super.initState();
   }
 
   void clearAndCloseSearch() {
@@ -129,9 +148,7 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
     return const SizedBox();
   }
 
-  void onMarkerTap() {
-    final markerPositon = widget.position;
-
+  void buildCurrentLocationMarker() {
     setState(() {
       updatedMarkers = updatedMarkers ?? {};
       updatedMarkers!.add(
@@ -148,9 +165,79 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
     });
 
     widget.onMarkersUpdated(updatedMarkers!);
+
+    BlocListener<PlacesCubit, PlacesState>(
+      listenWhen: (prev, current) => prev != current,
+      listener: (context, state) {
+        if (state is PlaceDirectionLoaded) {
+          placeDirections = state.directions;
+
+          polylinePoints = placeDirections!.polylinePoints.map((point) {
+            return LatLng(point.latitude, point.longitude);
+          }).toList();
+        }
+      },
+    );
   }
 
-  // void onTextFieldRequestFocus()
+  void getDirections(LatLng destination) {
+    LatLng origin = LatLng(
+      markerPositon.latitude,
+      markerPositon.longitude,
+    );
+
+    BlocProvider.of<PlacesCubit>(context).emitPlaceDirections(
+      origin,
+      destination,
+    );
+  }
+
+  Widget buildPlaceLocationBloc({required Widget child}) {
+    return BlocListener<PlacesCubit, PlacesState>(
+      listenWhen: (prev, current) => prev != current,
+      listener: (context, state) {
+        if (state is PlaceLocationLoaded) {
+          final lat = state.placeLocation.result.geometry.location.lat;
+          final lng = state.placeLocation.result.geometry.location.lng;
+          updatedMarkers = {
+            Marker(
+              markerId: MarkerId('$lat $lng'),
+              infoWindow: InfoWindow(title: searchController.value.text),
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueRed),
+              position: LatLng(lat, lng),
+              onTap: () {
+                buildCurrentLocationMarker();
+                widget.onGetDirection(
+                  {
+                    Polyline(
+                      polylineId: PolylineId('direction_polyline'),
+                      width: 5,
+                      color: AppColors.activeColor,
+                      points: polylinePoints,
+                    ),
+                  },
+                );
+                isSearchedPlaceMarkerClicked = isTimeAndDistanceVisible = true;
+              },
+            ),
+          };
+          widget.onMarkersUpdated(updatedMarkers!);
+
+          getDirections(LatLng(lat, lng));
+        }
+      },
+      child: child,
+    );
+  }
+
+  void removeAllMarkersAndUpdateUi() {
+    setState(() {
+      isSearchOverlayVisible = true;
+      updatedMarkers = {};
+    });
+    widget.onMarkersUpdated(emptyMarkers);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,8 +245,10 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
 
     return GestureDetector(
       onTap: () {
-        if (!_focusNode.hasFocus) return;
         _focusNode.unfocus();
+        setState(() {
+          isSearchedPlaceMarkerClicked = isTimeAndDistanceVisible = false;
+        });
       },
       child: Stack(
         children: [
@@ -173,39 +262,12 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                   elevation: 4,
                   borderRadius: BorderRadius.circular(12),
                   color: AppColors.thirdColor.withAlpha(180),
-                  child: BlocListener<PlacesCubit, PlacesState>(
-                    listenWhen: (prev, current) => prev != current,
-                    listener: (context, state) {
-                      if (state is PlaceLocationLoaded) {
-                        final lat =
-                            state.placeLocation.result.geometry.location.lat;
-                        final lng =
-                            state.placeLocation.result.geometry.location.lng;
-                        updatedMarkers = {
-                          Marker(
-                            markerId: MarkerId('$lat $lng'),
-                            infoWindow:
-                                InfoWindow(title: searchController.value.text),
-                            icon: BitmapDescriptor.defaultMarkerWithHue(
-                                BitmapDescriptor.hueRed),
-                            position: LatLng(lat, lng),
-                            onTap: onMarkerTap,
-                          ),
-                        };
-                        widget.onMarkersUpdated(updatedMarkers!);
-                      }
-                    },
+                  child: buildPlaceLocationBloc(
                     child: TextField(
                       controller: searchController,
                       focusNode: _focusNode,
                       onChanged: fetchSuggestions,
-                      onTap: () {
-                        setState(() {
-                          isSearchOverlayVisible = true;
-                          updatedMarkers = {};
-                        });
-                        widget.onMarkersUpdated(emptyMarkers);
-                      },
+                      onTap: removeAllMarkersAndUpdateUi,
                       decoration: InputDecoration(
                         hintText: 'Search for a location...',
                         hintStyle: TextStyle(color: AppColors.darkColor),
@@ -256,6 +318,7 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                       child: buildSearchBloc(),
                     ),
                   ),
+               
               ],
             ),
           ),

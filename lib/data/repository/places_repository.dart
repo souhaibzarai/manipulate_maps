@@ -1,3 +1,5 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:manipulate_maps/data/models/directions.dart';
 import 'package:manipulate_maps/data/models/place_location.dart';
 
 import '../models/place.dart';
@@ -19,10 +21,20 @@ class PlacesRepository {
     return readySuggestions;
   }
 
-  Future<PlaceLocation> getPlaceLocation(String placeID, String sessiontoken) async {
+  Future<PlaceLocation> getPlaceLocation(
+      String placeID, String sessiontoken) async {
     final place =
         await placesWebServices.getPlaceLocation(placeID, sessiontoken);
 
     return PlaceLocation.fromJson(place);
+  }
+
+  Future<Directions> getDirections(LatLng origin, LatLng destination) async {
+    final direction =
+        await placesWebServices.getDirections(origin, destination);
+
+    print('directions call is: $direction');
+
+    return Directions.fromJson(direction);
   }
 }

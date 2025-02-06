@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:manipulate_maps/data/models/directions.dart';
 import 'package:manipulate_maps/data/models/place_location.dart';
 import '../../data/models/place.dart';
 import '../../data/repository/places_repository.dart';
@@ -22,6 +24,12 @@ class PlacesCubit extends Cubit<PlacesState> {
         .getPlaceLocation(placeID, sessiontoken)
         .then((placeLocation) {
       emit(PlaceLocationLoaded(placeLocation));
+    });
+  }
+
+  Future<void> emitPlaceDirections(LatLng origin, LatLng destination) async {
+    placesRepository.getDirections(origin, destination).then((directions) {
+      emit(PlaceDirectionLoaded(directions: directions));
     });
   }
 }

@@ -8,7 +8,7 @@ import 'constants/strings.dart';
 late String _initialRoute;
 
 void main() async {
-  // TODO : delete api key from google maps
+  // TODO : delete api key from google maps and  print avoid from analysis_opt.yaml
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

@@ -81,12 +81,14 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  bool? floatingButtonClicked;
+
   Widget buildFloatingActionButton() {
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 0, 10, 30),
       child: FloatingActionButton(
         backgroundColor: AppColors.mainColor.withAlpha(160),
-        onPressed: goToMyCurrentPosition,
+        onPressed: goToMyCurrentPositionAndClearUi,
         child: const Icon(
           Icons.place,
           color: AppColors.thirdColor,
@@ -95,9 +97,11 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  Future<void> goToMyCurrentPosition() async {
+  Future<void> goToMyCurrentPositionAndClearUi() async {
     setState(() {
+      floatingButtonClicked = true;
       _markers = {};
+      _polylines = {};
     });
 
     final GoogleMapController controller = await _controller.future;
@@ -151,11 +155,13 @@ class _MapScreenState extends State<MapScreen> {
                     onMarkersUpdated: _updateMarkers,
                     position: location!,
                     onGetDirection: _updatePolyline,
+                    isFloatingButtonCLicked: floatingButtonClicked,
                   )
                 : const SizedBox(),
           ],
         ),
-        floatingActionButton: buildFloatingActionButton(),
+        floatingActionButton:
+            location != null ? buildFloatingActionButton() : null,
       ),
     );
   }

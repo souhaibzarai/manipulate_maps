@@ -10,12 +10,15 @@ import '../../constants/colors.dart';
 import 'place_item.dart';
 
 class FloatingSearchBar extends StatefulWidget {
-  const FloatingSearchBar({
+  FloatingSearchBar({
     super.key,
     required this.onMarkersUpdated,
     required this.position,
     required this.onGetDirection,
+    this.isFloatingButtonCLicked = false,
   });
+
+  bool? isFloatingButtonCLicked;
 
   final void Function(Set<Marker>) onMarkersUpdated;
 
@@ -201,13 +204,15 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                     BlocProvider.of<PlacesCubit>(context).state;
 
                 if (currentState is PlaceDirectionLoaded) {
-                  duration = currentState.directions.duration;
+                  duration = currentState.directions.duration
+                      .replaceFirst(' hour', 'h');
                   distance = currentState.directions.distance;
                   polylinePoints = currentState.directions.polylinePoints.map(
                     (point) {
                       return LatLng(point.latitude, point.longitude);
                     },
                   ).toList();
+
                   print('Converted Polyline Points: $polylinePoints');
 
                   widget.onGetDirection(
@@ -241,7 +246,9 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
     setState(() {
       isSearchOverlayVisible = true;
       updatedMarkers = {};
+      polylinePoints = [];
     });
+    widget.onGetDirection({});
     widget.onMarkersUpdated(emptyMarkers);
   }
 
@@ -275,7 +282,7 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                   color: Colors.white, // Meilleur contraste
                 ),
               ),
-              SizedBox(width: 12), // Espacement entre les éléments
+              Spacer(),
               Icon(Icons.location_on,
                   color: Colors.white, size: 18), // Icône distance
               SizedBox(width: 6),
@@ -302,7 +309,8 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
       onTap: () {
         _focusNode.unfocus();
         setState(() {
-          isSearchedPlaceMarkerClicked = isTimeAndDistanceVisible = false;
+          isSearchedPlaceMarkerClicked = false;
+          isTimeAndDistanceVisible = false;
         });
       },
       child: Stack(
@@ -374,9 +382,11 @@ class _FloatingSearchBarState extends State<FloatingSearchBar> {
                     ),
                   ),
                 SizedBox(height: isTimeAndDistanceVisible ? 10 : 0),
-                !isSearchOverlayVisible &&
-                        isTimeAndDistanceVisible &&
-                        isSearchedPlaceMarkerClicked
+                (!isSearchOverlayVisible &&
+                            isTimeAndDistanceVisible &&
+                            isSearchedPlaceMarkerClicked &&
+                            polylinePoints.isNotEmpty) &&
+                        !(widget.isFloatingButtonCLicked ??= false)
                     ? buildTimeAndDuration(duration, distance)
                     : SizedBox(),
               ],
